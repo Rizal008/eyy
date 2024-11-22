@@ -1,0 +1,29 @@
+name: Post to Facebook
+
+on:
+  schedule:
+    - cron: "0 * * * *"  # Setiap jam (0 menit pada setiap jam)
+  workflow_dispatch:
+
+jobs:
+  post_photos:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+      
+    - name: Install dependencies
+      run: |
+        pip install requests
+        pip install natsort
+
+    - name: Run script
+      env:
+        ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+        PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+      run: python upload_to_facebook.py
